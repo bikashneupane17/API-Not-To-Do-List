@@ -1,3 +1,5 @@
+//users is table name
+
 insert single object
 db.users.insert({
     name:"Jon",

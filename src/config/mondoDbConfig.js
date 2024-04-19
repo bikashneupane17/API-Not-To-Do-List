@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import TaskSchema from "../model/task/TaskSchema";
 
 // mongoose.connect("mongodb://localhost:27017/dentedTestDB")
 
