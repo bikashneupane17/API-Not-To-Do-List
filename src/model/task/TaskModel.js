@@ -3,30 +3,20 @@ import TaskSchema from "./TaskSchema.js";
 
 //Create
 export const insertTask = (taskObj) => {
-  const newTask = new TaskSchema(taskObj);
-  return newTask()
-    .save()
-    .then(() => console.log("New task added"))
-    .catch((error) => console.log(error));
+  return TaskSchema(taskObj).save();
 };
 
 //Read
-export const findTask = (id) => {
-  return TaskSchema.findById(id)
-    .then(() => console.log("Task Updated"))
-    .catch((error) => console.log(error));
+export const getTask = () => {
+  return TaskSchema.find();
 };
 
 //Update
-export const updateTask = (id, updatedTask) => {
-  return TaskSchema.updateOne(id, updatedTask)
-    .then(() => console.log("Task Updated"))
-    .catch((error) => console.log(error));
+export const updateTask = ({ _id, type }) => {
+  return TaskSchema.findByIdAndUpdate(_id, { type }, { new: true });
 };
 
 //Delete
-export const deleteTask = (id) => {
-  return TaskSchema.findByIdAndDelete(id)
-    .then(() => console.log("Task Deleted"))
-    .catch((error) => console.log(error));
+export const deleteTask = (_id) => {
+  return TaskSchema.findByIdAndDelete(_id);
 };

@@ -6,14 +6,13 @@ import { connectMongo } from "./src/config/mondoDbConfig.js";
 const PORT = process.env.port || 8000;
 
 const app = express();
-
-connectMongo();
-
 //middlewares
 app.use(morgan("dev"));
 app.use(express.json());
 app.use("/api/v1/tasks", taskRouter);
-//express.json() coverts request data to object which can be used by server
+//express.json() converts request data to object which can be used by server
+
+connectMongo();
 
 app.listen(PORT, (error) => {
   error

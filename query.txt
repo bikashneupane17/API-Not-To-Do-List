@@ -58,3 +58,9 @@ update many
 db.users.updateMany({name:"Jon"}, {$set: {address:"Melbourne"}})
 
 
+
+
+data coming in body or  query or params??
+req.body 
+req.param 
+req.query

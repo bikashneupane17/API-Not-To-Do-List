@@ -1,5 +1,10 @@
 import express from "express";
-import { insertTask } from "../model/task/TaskModel.js";
+import {
+  getTask,
+  insertTask,
+  updateTask,
+  deleteTask,
+} from "../model/task/TaskModel.js";
 
 // import { idGenerator } from "../utils.js";
 
@@ -7,10 +12,12 @@ const router = express.Router();
 
 // let fakeDB = [];
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   console.log(req.body);
+  const tasks = await getTask();
   res.json({
     message: "From Router get",
+    tasks,
   });
 });
 
@@ -20,6 +27,7 @@ router.post("/", async (req, res) => {
     result?._id
       ? res.json({
           message: "From Router post",
+          result,
         })
       : res.json({
           message: "Failed to add new data",
@@ -37,28 +45,47 @@ router.post("/", async (req, res) => {
 //   });
 // });
 
-//update task
-router.patch("/", (req, res) => {
-  const { id, type } = req.body;
-  fakeDB = fakeDB.map((item) => {
-    if (item.id === id) {
-      return { ...item, type }; //item.type === type
-    }
-    return item;
-  });
+// update task
+router.patch("/", async (req, res) => {
+  try {
+    const result = await updateTask(req.body);
 
-  res.json({
-    message: "Your task has been updated",
-  });
+    result?._id
+      ? res.json({
+          message: "Your task has been updated",
+          result,
+        })
+      : res.json({
+          message: "Your task update failed",
+        });
+  } catch (error) {
+    res.send(500).json({
+      messgae: "Something went wrong, try again later",
+    });
+  }
 });
 
 //delete task
-router.delete("/", (req, res) => {
-  const { id } = req.body;
-  fakeDB = fakeDB.filter((item) => item.id !== id);
-  res.json({
-    message: "Your task has been deleted",
-  });
+router.delete("/:_id", async (req, res) => {
+  try {
+    const _id = req.body;
+
+    console.log(_id);
+
+    const result = await deleteTask(_id);
+
+    result?._id
+      ? res.json({
+          message: "Your task has been deleted",
+        })
+      : res.json({
+          message: "Unable to delete, try again later",
+        });
+  } catch (error) {
+    res.send(500).json({
+      messgae: "Something went wrong, try again later",
+    });
+  }
 });
 
 export default router;
