@@ -6,19 +6,23 @@ import {
   deleteTask,
 } from "../model/task/TaskModel.js";
 
-// import { idGenerator } from "../utils.js";
-
 const router = express.Router();
 
-// let fakeDB = [];
-
 router.get("/", async (req, res) => {
-  console.log(req.body);
-  const tasks = await getTask();
-  res.json({
-    message: "From Router get",
-    tasks,
-  });
+  try {
+    const tasks = await getTask(req.body);
+    console.log(req.body);
+    res.json({
+      status: "success",
+      message: "From Router get",
+      tasks,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      messgae: "Something went wrong, try again later",
+    });
+  }
 });
 
 router.post("/", async (req, res) => {
@@ -26,24 +30,20 @@ router.post("/", async (req, res) => {
     const result = await insertTask(req.body);
     result?._id
       ? res.json({
-          message: "From Router post",
-          result,
+          status: "success",
+          message: "New task has been added",
         })
       : res.json({
+          status: "error",
           message: "Failed to add new data",
         });
   } catch (error) {
     console.log(error);
+    res.status(500).json({
+      messgae: "Something went wrong, try again later",
+    });
   }
 });
-
-// router.post("/", (req, res) => {
-//   const id = idGenerator();
-//   fakeDB.push({ ...req.body, id });
-//   res.json({
-//     message: "From Router post",
-//   });
-// });
 
 // update task
 router.patch("/", async (req, res) => {
@@ -52,14 +52,17 @@ router.patch("/", async (req, res) => {
 
     result?._id
       ? res.json({
+          status: "success",
           message: "Your task has been updated",
           result,
         })
       : res.json({
+          status: "error",
           message: "Your task update failed",
         });
   } catch (error) {
     res.send(500).json({
+      status: "error",
       messgae: "Something went wrong, try again later",
     });
   }
@@ -68,21 +71,25 @@ router.patch("/", async (req, res) => {
 //delete task
 router.delete("/:_id", async (req, res) => {
   try {
-    const _id = req.body;
+    const { _id } = req.params;
 
-    console.log(_id);
+    console.log(req.body);
 
     const result = await deleteTask(_id);
 
     result?._id
       ? res.json({
+          status: "success",
           message: "Your task has been deleted",
         })
       : res.json({
-          message: "Unable to delete, try again later",
+          status: "error",
+          message: `Unable to delete, try again later ${_id}`,
         });
   } catch (error) {
-    res.send(500).json({
+    console.log(error);
+    res.status(500).json({
+      status: "error",
       messgae: "Something went wrong, try again later",
     });
   }

@@ -5,13 +5,13 @@ const taskSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  hr: {
+  hour: {
     type: Number,
     required: true,
   },
   type: {
     type: String,
-    required: true,
+    default: "entry",
   },
 });
 
